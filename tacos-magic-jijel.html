@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tacos Magic – جيجل</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--red:#E8151B;--dred:#A50D11;--orange:#FF6B00;--gold:#FFB800;--black:#080808;--dark:#111;--card:#181818;--gray:#777;--white:#fff;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:'Cairo',sans-serif;min-height:100vh;overflow-x:hidden;}
+
+/* NAV */
+nav{position:fixed;top:0;width:100%;z-index:9999;background:rgba(8,8,8,.96);backdrop-filter:blur(16px);border-bottom:1px solid rgba(232,21,27,.25);height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 5%;}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;letter-spacing:3px;color:#fff;cursor:pointer;border:none;background:none;}
+.logo span{color:var(--red);}
+.back-btn{display:none;align-items:center;gap:.5rem;background:rgba(232,21,27,.15);border:1px solid rgba(232,21,27,.4);color:var(--red);font-family:'Cairo',sans-serif;font-weight:700;font-size:.9rem;padding:.45rem 1.1rem;border-radius:6px;cursor:pointer;transition:all .2s;}
+.back-btn:hover{background:var(--red);color:#fff;}
+.nav-links{display:flex;gap:1.5rem;list-style:none;align-items:center;}
+.nav-links button{color:rgba(255,255,255,.7);text-decoration:none;font-weight:600;font-size:.88rem;transition:color .2s;cursor:pointer;background:none;border:none;font-family:'Cairo',sans-serif;}
+.nav-links button:hover{color:var(--red);}
+.nav-call{background:var(--red) !important;color:#fff !important;padding:.45rem 1.2rem !important;border-radius:4px !important;font-weight:700 !important;}
+.nav-call:hover{background:var(--dred) !important;color:#fff !important;}
+.burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none;}
+.burger span{width:24px;height:2px;background:#fff;border-radius:2px;display:block;}
+
+/* PAGE SYSTEM */
+.page{display:none;padding-top:68px;min-height:100vh;}
+.page.active{display:block;animation:fadeIn .3s ease both;}
+
+/* HOME HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:7rem 5% 4rem;position:relative;overflow:hidden;}
+.hero-glow{position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% 55%,rgba(232,21,27,.13) 0%,transparent 70%);pointer-events:none;}
+.hero-badge{display:inline-block;background:rgba(232,21,27,.12);border:1px solid rgba(232,21,27,.4);color:var(--red);font-size:.78rem;font-weight:700;letter-spacing:3px;padding:.4rem 1.2rem;border-radius:50px;margin-bottom:1.8rem;text-transform:uppercase;animation:fadeUp .7s ease both;}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(5rem,16vw,13rem);line-height:.9;letter-spacing:-2px;margin-bottom:1.5rem;animation:fadeUp .8s .08s ease both;}
+.hero-title .t{display:block;color:#fff;}
+.hero-title .m{display:block;background:linear-gradient(135deg,var(--red),var(--orange),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-size:1.1rem;color:rgba(255,255,255,.55);max-width:480px;margin:0 auto 2.5rem;line-height:1.9;animation:fadeUp .8s .16s ease both;}
+.hero-sub b{color:var(--gold);}
+.hero-stats{display:flex;gap:3rem;justify-content:center;margin-top:4rem;padding-top:2.5rem;border-top:1px solid rgba(255,255,255,.07);animation:fadeUp .8s .32s ease both;flex-wrap:wrap;row-gap:1.5rem;}
+.stat-n{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;color:var(--red);line-height:1;}
+.stat-l{font-size:.78rem;color:var(--gray);margin-top:.3rem;letter-spacing:1px;}
+.fl{position:absolute;font-size:3rem;opacity:.08;pointer-events:none;animation:flt 7s ease-in-out infinite;}
+.fl1{top:22%;left:4%}.fl2{top:55%;right:4%;animation-delay:2.5s}.fl3{bottom:18%;left:10%;font-size:2rem;animation-delay:4s}.fl4{top:30%;right:14%;font-size:2.5rem;animation-delay:1.2s}
+
+/* SECTION */
+.section{padding:5rem 5%;max-width:1200px;margin:0 auto;}
+.sec-label{display:block;font-family:'Bebas Neue',sans-serif;font-size:.78rem;letter-spacing:5px;color:var(--red);text-transform:uppercase;margin-bottom:.8rem;}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,5rem);line-height:1;margin-bottom:1.5rem;}
+
+/* CATEGORY CARDS */
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1.2rem;margin-top:2.5rem;}
+.cat-card{background:var(--card);border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:2rem 1.5rem;cursor:pointer;transition:all .3s;position:relative;overflow:hidden;text-align:center;border:none;width:100%;color:var(--white);font-family:'Cairo',sans-serif;}
+.cat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--red),var(--orange));opacity:0;transition:opacity .3s;}
+.cat-card:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(0,0,0,.6);}
+.cat-card:hover::before{opacity:1;}
+.cat-emoji{font-size:3.5rem;margin-bottom:1rem;display:block;transition:transform .3s;}
+.cat-card:hover .cat-emoji{transform:scale(1.15);}
+.cat-name{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:1px;margin-bottom:.4rem;}
+.cat-sub{color:var(--gray);font-size:.82rem;line-height:1.6;}
+.cat-arrow{display:inline-block;margin-top:.8rem;color:var(--red);font-size:.8rem;font-weight:700;letter-spacing:2px;}
+
+/* SOCIAL QUICK */
+.soc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-top:2rem;}
+.soc-card{border-radius:16px;padding:1.8rem 1.5rem;cursor:pointer;border:1px solid rgba(255,255,255,.08);text-decoration:none;color:var(--white);display:flex;flex-direction:column;align-items:center;gap:.7rem;transition:all .3s;text-align:center;}
+.soc-card:hover{transform:translateY(-5px);box-shadow:0 15px 40px rgba(0,0,0,.5);}
+.soc-fb{background:linear-gradient(135deg,#1a3a6b,#1877F2 80%);}
+.soc-ig{background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);}
+.soc-tt{background:linear-gradient(135deg,#010101,#69C9D0 180%);}
+.soc-ph{background:linear-gradient(135deg,#1a6b1a,#25D366 80%);}
+.soc-name{font-weight:700;font-size:1rem;}
+.soc-handle{font-size:.82rem;opacity:.8;}
+.soc-icon{font-size:2.4rem;}
+.soc-pill{background:rgba(255,255,255,.18);font-size:.75rem;font-weight:700;padding:.25rem .7rem;border-radius:20px;}
+
+/* SUB PAGE */
+.sub-hero{padding:3.5rem 5% 2.5rem;background:linear-gradient(180deg,rgba(232,21,27,.07) 0%,transparent 100%);border-bottom:1px solid rgba(255,255,255,.06);text-align:center;}
+.sub-hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,9vw,7rem);letter-spacing:1px;line-height:1;}
+.sub-hero p{color:var(--gray);font-size:1rem;margin-top:.7rem;}
+
+/* ITEM GRID */
+.items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1.2rem;padding:2.5rem 5%;max-width:1200px;margin:0 auto;}
+.item-card{background:var(--card);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:1.6rem;position:relative;overflow:hidden;transition:all .3s;}
+.item-card:hover{transform:translateY(-4px);border-color:rgba(232,21,27,.3);box-shadow:0 16px 40px rgba(0,0,0,.5);}
+.item-emoji{font-size:2.8rem;margin-bottom:.9rem;display:block;}
+.item-name{font-size:1.1rem;font-weight:700;margin-bottom:.4rem;}
+.item-desc{color:var(--gray);font-size:.84rem;line-height:1.7;margin-bottom:1rem;}
+.item-footer{display:flex;align-items:center;justify-content:space-between;}
+.item-badge{font-size:.72rem;font-weight:700;letter-spacing:1px;padding:.28rem .75rem;border-radius:4px;text-transform:uppercase;}
+.badge-r{background:rgba(232,21,27,.15);color:var(--red);}
+.badge-o{background:rgba(255,107,0,.15);color:var(--orange);}
+.badge-g{background:rgba(255,184,0,.15);color:var(--gold);}
+.badge-gr{background:rgba(80,200,100,.15);color:#6ddf80;}
+.badge-b{background:rgba(50,150,255,.15);color:#7ab8ff;}
+.pop-tag{position:absolute;top:.9rem;left:.9rem;background:var(--gold);color:var(--black);font-size:.68rem;font-weight:900;padding:.22rem .65rem;border-radius:4px;letter-spacing:1px;text-transform:uppercase;}
+.new-tag{position:absolute;top:.9rem;left:.9rem;background:var(--red);color:#fff;font-size:.68rem;font-weight:900;padding:.22rem .65rem;border-radius:4px;letter-spacing:1px;text-transform:uppercase;}
+
+/* CALL BAR */
+.call-bar{background:linear-gradient(135deg,rgba(232,21,27,.12),rgba(255,107,0,.07));border:1px solid rgba(232,21,27,.2);border-radius:16px;padding:2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;max-width:1160px;margin:0 auto 3rem;}
+.call-bar p{font-size:1rem;font-weight:600;color:rgba(255,255,255,.8);}
+.call-bar a{background:var(--red);color:#fff;font-weight:700;font-size:1rem;padding:.75rem 2rem;border-radius:8px;text-decoration:none;transition:all .2s;letter-spacing:1px;display:inline-block;}
+.call-bar a:hover{background:var(--dred);transform:scale(1.04);}
+
+/* SOCIAL BIG */
+.soc-page-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;padding:3rem 5%;max-width:1100px;margin:0 auto;}
+.soc-big{border-radius:20px;padding:2.5rem;text-decoration:none;color:#fff;display:flex;flex-direction:column;gap:1rem;transition:all .3s;border:1px solid rgba(255,255,255,.08);}
+.soc-big:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(0,0,0,.6);}
+.soc-big .icon{font-size:3rem;}
+.soc-big .name{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:2px;}
+.soc-big .handle{opacity:.75;font-size:.9rem;}
+.soc-big .followers{background:rgba(255,255,255,.18);border-radius:20px;padding:.35rem 1rem;font-size:.82rem;font-weight:700;display:inline-block;}
+.open-btn{margin-top:.5rem;background:rgba(255,255,255,.18);color:#fff;font-family:'Cairo',sans-serif;font-weight:700;font-size:.9rem;padding:.7rem 1.5rem;border-radius:8px;text-decoration:none;display:inline-block;text-align:center;transition:background .2s;}
+.open-btn:hover{background:rgba(255,255,255,.3);}
+
+/* LOCATION */
+.loc-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;padding:3rem 5%;max-width:1100px;margin:0 auto;align-items:start;}
+.info-list{display:flex;flex-direction:column;gap:1rem;}
+.info-row{background:var(--card);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:1.4rem;display:flex;align-items:center;gap:1rem;transition:border-color .2s;}
+.info-row:hover{border-color:rgba(232,21,27,.3);}
+.info-ico{width:46px;height:46px;background:rgba(232,21,27,.12);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0;}
+.info-lbl{font-size:.75rem;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin-bottom:.25rem;}
+.info-val{font-size:.98rem;font-weight:700;}
+.info-val a{color:#fff;text-decoration:none;}
+.info-val a:hover{color:var(--red);}
+.map-box{background:var(--card);border:1px solid rgba(255,255,255,.07);border-radius:20px;height:420px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;text-align:center;padding:2rem;}
+.map-box h3{font-size:1.1rem;font-weight:700;}
+.map-box p{color:var(--gray);font-size:.9rem;}
+.map-btn{background:var(--red);color:#fff;font-weight:700;font-size:.95rem;padding:.8rem 2rem;border-radius:8px;text-decoration:none;transition:all .2s;display:inline-block;}
+.map-btn:hover{background:var(--dred);transform:scale(1.04);}
+
+/* ABOUT */
+.about-wrap{padding:3rem 5%;max-width:1100px;margin:0 auto;}
+.about-intro{background:var(--card);border:1px solid rgba(255,255,255,.07);border-radius:20px;padding:2.5rem;margin-bottom:2rem;}
+.about-intro p{color:rgba(255,255,255,.7);line-height:1.9;font-size:1rem;margin-bottom:1rem;}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-bottom:2rem;}
+.feat-box{background:var(--card);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:1.4rem;display:flex;align-items:center;gap:.9rem;font-weight:600;font-size:.9rem;transition:border-color .2s;}
+.feat-box:hover{border-color:rgba(232,21,27,.35);}
+.feat-box span:first-child{font-size:1.6rem;}
+
+/* FOOTER */
+footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.06);padding:3rem 5% 1.5rem;margin-top:4rem;}
+.foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem;margin-bottom:2.5rem;}
+.foot-brand{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:3px;margin-bottom:.8rem;cursor:pointer;}
+.foot-brand span{color:var(--red);}
+.foot-desc{color:var(--gray);font-size:.88rem;line-height:1.8;max-width:280px;}
+.foot-col h4{font-weight:700;font-size:.95rem;margin-bottom:1rem;}
+.foot-col ul{list-style:none;}
+.foot-col li{margin-bottom:.6rem;}
+.foot-col button,.foot-col a{color:var(--gray);text-decoration:none;font-size:.88rem;cursor:pointer;transition:color .2s;background:none;border:none;font-family:'Cairo',sans-serif;}
+.foot-col button:hover,.foot-col a:hover{color:#fff;}
+.foot-bottom{display:flex;justify-content:space-between;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.06);color:var(--gray);font-size:.82rem;flex-wrap:wrap;gap:.8rem;}
+
+/* DRINK SECTION HEADER */
+.drink-section-header{padding:2.5rem 5% .5rem;max-width:1200px;margin:0 auto;}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:none;}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes flt{0%,100%{transform:translateY(0) rotate(0);}50%{transform:translateY(-18px) rotate(6deg);}}
+[data-anim]{opacity:0;transform:translateY(35px);transition:opacity .7s ease,transform .7s ease;}
+[data-anim].vis{opacity:1;transform:none;}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .nav-links{display:none;}
+  .burger{display:flex;}
+  .loc-grid{grid-template-columns:1fr;}
+  .foot-grid{grid-template-columns:1fr;gap:2rem;}
+  .hero-stats{gap:1.5rem 2.5rem;}
+}
+@media(max-width:600px){
+  .cat-grid{grid-template-columns:1fr 1fr;}
+  .call-bar{flex-direction:column;text-align:center;}
+  .foot-bottom{flex-direction:column;text-align:center;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <button class="logo" onclick="goPage('home')">TACOS <span>MAGIC</span></button>
+  <ul class="nav-links" id="navLinks">
+    <li><button onclick="goPage('home')">الرئيسية</button></li>
+    <li><button onclick="goPage('menu-tacos')">🌮 التاكوس</button></li>
+    <li><button onclick="goPage('menu-pizza')">🍕 البيتزا</button></li>
+    <li><button onclick="goPage('menu-drinks')">🧃 مشروبات</button></li>
+    <li><button onclick="goPage('social')">📱 تواصل</button></li>
+    <li><button onclick="goPage('location')">📍 موقعنا</button></li>
+    <li><a href="tel:+213665461822" class="nav-call" style="color:#fff;text-decoration:none;font-family:Cairo,sans-serif;font-weight:700;font-size:.88rem;background:var(--red);padding:.45rem 1.2rem;border-radius:4px;">📞 اطلب الآن</a></li>
+  </ul>
+  <button class="back-btn" id="backBtn" onclick="goPage('home')">← رجوع</button>
+  <button class="burger" onclick="toggleBurger()"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- ===================== HOME ===================== -->
+<div class="page active" id="page-home">
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="fl fl1">🌮</div>
+    <div class="fl fl2">🍕</div>
+    <div class="fl fl3">🔥</div>
+    <div class="fl fl4">⭐</div>
+    <span class="hero-badge">🔥 مطعم تاكوس وبيتزا — جيجل، الجزائر</span>
+    <h1 class="hero-title"><span class="t">TACOS</span><span class="m">MAGIC</span></h1>
+    <p class="hero-sub">أشهى <b>تاكوس وبيتزا</b> في قلب جيجل<br>جودة لا تُضاهى، نكهات تسحر الذوق</p>
+    <div class="hero-stats">
+      <div><div class="stat-n">7.6K+</div><div class="stat-l">متابع فيسبوك</div></div>
+      <div><div class="stat-n">6K+</div><div class="stat-l">متابع إنستغرام</div></div>
+      <div><div class="stat-n">130+</div><div class="stat-l">منشور</div></div>
+      <div><div class="stat-n">⭐4.5</div><div class="stat-l">تقييم Google</div></div>
+    </div>
+  </section>
+
+  <div class="section" data-anim>
+    <span class="sec-label">✦ قائمتنا</span>
+    <h2 class="sec-title">اختر ما يشتهيه قلبك</h2>
+    <div class="cat-grid">
+      <button class="cat-card" onclick="goPage('menu-tacos')" style="background:var(--card);">
+        <span class="cat-emoji">🌮</span>
+        <div class="cat-name">التاكوس</div>
+        <div class="cat-sub">8 أنواع من التاكوس الطازج بصوصات خاصة</div>
+        <div class="cat-arrow">اكتشف →</div>
+      </button>
+      <button class="cat-card" onclick="goPage('menu-pizza')" style="background:var(--card);">
+        <span class="cat-emoji">🍕</span>
+        <div class="cat-name">البيتزا</div>
+        <div class="cat-sub">6 أنواع بيتزا بعجينة طازجة وجبن مذاب</div>
+        <div class="cat-arrow">اكتشف →</div>
+      </button>
+      <button class="cat-card" onclick="goPage('menu-sides')" style="background:var(--card);">
+        <span class="cat-emoji">🍟</span>
+        <div class="cat-name">المقبلات</div>
+        <div class="cat-sub">فريتس، نوغتس، موزاريلا ستيكس وأكثر</div>
+        <div class="cat-arrow">اكتشف →</div>
+      </button>
+      <button class="cat-card" onclick="goPage('menu-drinks')" style="background:var(--card);">
+        <span class="cat-emoji">🧃</span>
+        <div class="cat-name">المشروبات</div>
+        <div class="cat-sub">عصائر جزائرية طبيعية ومشروبات باردة</div>
+        <div class="cat-arrow">اكتشف →</div>
+      </button>
+      <button class="cat-card" onclick="goPage('social')" style="background:var(--card);">
+        <span class="cat-emoji">📱</span>
+        <div class="cat-name">تواصل معنا</div>
+        <div class="cat-sub">فيسبوك، إنستغرام، تيكتوك، واتساب</div>
+        <div class="cat-arrow">تابعنا →</div>
+      </button>
+      <button class="cat-card" onclick="goPage('location')" style="background:var(--card);">
+        <span class="cat-emoji">📍</span>
+        <div class="cat-name">موقعنا</div>
+        <div class="cat-sub">شارع أول نوفمبر، جيجل — نفتح يومياً</div>
+        <div class="cat-arrow">خريطة →</div>
+      </button>
+      <button class="cat-card" onclick="goPage('about')" style="background:var(--card);">
+        <span class="cat-emoji">✨</span>
+        <div class="cat-name">من نحن</div>
+        <div class="cat-sub">قصتنا، قيمنا، وما يميزنا في جيجل</div>
+        <div class="cat-arrow">اعرف أكثر →</div>
+      </button>
+      <a class="cat-card" href="tel:+213665461822" style="background:var(--card);display:block;text-align:center;">
+        <span class="cat-emoji">📞</span>
+        <div class="cat-name">اطلب الآن</div>
+        <div class="cat-sub">اتصل بنا للطلب أو الاستفسار مباشرة</div>
+        <div class="cat-arrow" style="color:var(--gold);">0665 46 18 22</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="section" data-anim>
+    <span class="sec-label">✦ تواصل معنا</span>
+    <h2 class="sec-title">نحن في كل مكان</h2>
+    <div class="soc-grid">
+      <a href="https://www.facebook.com/tacosmagicjijel/" target="_blank" class="soc-card soc-fb">
+        <span class="soc-icon">📘</span>
+        <span class="soc-name">فيسبوك</span>
+        <span class="soc-handle">TACOS MAGIC</span>
+        <span class="soc-pill">7,641 إعجاب</span>
+      </a>
+      <a href="https://www.instagram.com/tacosmagic/" target="_blank" class="soc-card soc-ig">
+        <span class="soc-icon">📸</span>
+        <span class="soc-name">إنستغرام</span>
+        <span class="soc-handle">@tacosmagic</span>
+        <span class="soc-pill">6,028 متابع</span>
+      </a>
+      <a href="https://www.tiktok.com/@tacosmagic" target="_blank" class="soc-card soc-tt">
+        <span class="soc-icon">🎵</span>
+        <span class="soc-name">تيكتوك</span>
+        <span class="soc-handle">@tacosmagic</span>
+        <span class="soc-pill">تابعنا</span>
+      </a>
+      <a href="tel:+213665461822" class="soc-card soc-ph">
+        <span class="soc-icon">📞</span>
+        <span class="soc-name">اتصل بنا</span>
+        <span class="soc-handle">0665 46 18 22</span>
+        <span class="soc-pill">مفتوح الآن ✅</span>
+      </a>
+    </div>
+  </div>
+
+  <footer>
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand" onclick="goPage('home')">TACOS <span>MAGIC</span></div>
+        <p class="foot-desc">مطعم فاست فود متخصص في التاكوس والبيتزا في قلب جيجل. نقدم جودة لا تُضاهى يومياً.</p>
+      </div>
+      <div class="foot-col">
+        <h4>روابط سريعة</h4>
+        <ul>
+          <li><button onclick="goPage('home')">الرئيسية</button></li>
+          <li><button onclick="goPage('menu-tacos')">التاكوس</button></li>
+          <li><button onclick="goPage('menu-pizza')">البيتزا</button></li>
+          <li><button onclick="goPage('menu-drinks')">المشروبات</button></li>
+          <li><button onclick="goPage('about')">من نحن</button></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>تواصل</h4>
+        <ul>
+          <li><a href="tel:+213665461822">📞 0665 46 18 22</a></li>
+          <li><a href="https://www.facebook.com/tacosmagicjijel/" target="_blank">📘 فيسبوك</a></li>
+          <li><a href="https://www.instagram.com/tacosmagic/" target="_blank">📸 إنستغرام</a></li>
+          <li><a href="https://www.tiktok.com/@tacosmagic" target="_blank">🎵 تيكتوك</a></li>
+          <li><button onclick="goPage('location')">📍 موقعنا</button></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2025 Tacos Magic – جيجل، الجزائر</span>
+      <span style="color:var(--red);">🌮 You wanna get a delicious tacos and pizza!</span>
+    </div>
+  </footer>
+</div>
+
+<!-- ===================== TACOS ===================== -->
+<div class="page" id="page-menu-tacos">
+  <div class="sub-hero">
+    <span class="sec-label" style="font-size:.75rem;">✦ قائمتنا</span>
+    <h1>🌮 التاكوس</h1>
+    <p>8 أنواع من التاكوس الطازج — خبز تورتيا ناعم مع أشهى الحشوات</p>
+  </div>
+  <div class="items-grid">
+    <div class="item-card">
+      <div class="pop-tag">⭐ الأكثر طلباً</div>
+      <span class="item-emoji">🌮</span>
+      <div class="item-name">تاكوس دجاج كلاسيك</div>
+      <div class="item-desc">خبز تورتيا ناعم محشو بدجاج مشوي معطّر بالبهارات، خس طازج، طماطم، بصل أحمر وصوص الكريم الخاص</div>
+      <div class="item-footer"><span class="item-badge badge-r">كلاسيك</span></div>
+    </div>
+    <div class="item-card">
+      <span class="item-emoji">🔥</span>
+      <div class="item-name">تاكوس سبايسي</div>
+      <div class="item-desc">لمحبي الحار — دجاج مشوي بصوص الهاريسة الحمراء، فلفل حار، جبن مذاب وصوص الثوم المحمّص</div>
+      <div class="item-footer"><span class="item-badge badge-r">حار 🌶️</span></div>
+    </div>
+    <div class="item-card">
+      <span class="item-emoji">🧀</span>
+      <div class="item-name">تاكوس فروماج</div>
+      <div class="item-desc">مليء بجبن الشيدر المذاب الكريمي، دجاج مقرمش وصوص الثوم الخاص بنا — للعشاق الحقيقيين للجبن</div>
+      <div class="item-footer"><span class="item-badge badge-g">جبن</span></div>
+    </div>
+    <div class="item-card">
+      <div class="new-tag">جديد</div>
+      <span class="item-emoji">🌯</span>
+      <div class="item-name">تاكوس ميكس</div>
+      <div class="item-desc">مزيج رائع من الدجاج والخضار المشكّلة مع ثلاثة صوصات مختلفة لنكهة لا تُنسى</div>
+      <div class="item-footer"><span class="item-badge badge-o">ميكس</span></div>
+    </div>
+    <div class="item-card">
+      <span class="item-emoji">🥩</span>
+      <div class="item-name">تاكوس كفتة</div>
+      <div class="item-desc">كفتة لحم مشوية محضّرة بالبهارات الشرقية مع صوص الطماطم وخضار طازجة في تورتيا دافئة</div>
+      <div class="item-footer"><span class="item-badge badge-r">لحم</span></div>
+    </div>
+    <div class="item-card">
+      <span class="item-emoji">🐟</span>
+      <div class="item-name">تاكوس سمك</div>
+      <div class="item-desc">سمك مقرمش خفيف مع صوص التارتار، خس طازج وطماطم — وجبة خفيفة ولذيذة من البحر</div>
+      <div class="item-footer"><span class="item-badge badge-b">بحري</span></div>
+    </div>
+    <div class="item-card">
+      <span class="item-emoji">🥑</span>
+      <div class="item-name">تاكوس خضار</div>
+      <div class="item-desc">لمحبي الخضار — فلفل ملوّن، ذرة، فطر وصوص الأفوكادو الكريمي في تورتيا طازجة</div>
+      <div class="item-footer"><span class="item-badge badge-gr">نباتي</span></div>
+    </div>
+    <div class="item-card">
+      <span class="item-emoji">👨‍👩‍👧‍👦</span>
+      <div class="item-name">وجبة فاميلي تاكوس</div>
+      <div class="item-desc">4 تاكوس متنوعة + فريتس كبير + مشروبان — وجبة عائلية كاملة بسعر ممتاز</div>
+      <div class="item-footer"><span class="item-badge badge-g">عرض خاص</span></div>
+    </div>
+  </div>
+  <div class="call-bar" style="margin:0 5% 3rem;">
+    <p>🌮 اطلب تاكوسك الآن — توصيل سريع لباب بيتك في جيجل</p>
+    <a href="tel:+213665461822">📞 0665 46 18 22</a>
+  </div>
+</div>
+
+<!-- ===================== PIZZA ===================== -->
+<div class="page" id="page-menu-pizza">
+  <div class="sub-hero">
+    <span class="sec-label" style="font-size:.75rem;">✦ قائمتنا</span>
+    <h1>🍕 البيتزا</h1>
+    <p>عجينة طازجة يومياً — موزاريلا أصلية وصوصات إيطالية</p>
+  </div>
+  <div class="items-grid">
+    <div class="item-card">
+      <div class="pop-tag">⭐ الأكثر طلباً</div>
+      <span class="item-emoji">🍕</span>
+      <div class="item-name">بيتزا ماجيك</div>
+      <div class="item-desc">بيتزتنا الخاصة — دجاج مشوي، فطر، فلفل ملوّن، موزاريلا دبل وصوص الطماطم المنزلي الخاص</div>
+      <div class="item-footer"><span class="item-badge badge-r">خاصتنا</span></div>
+    </div>
+    <div class="item-card">
+      <span class="item-emoji">🍗</span>
+      <div class="item-name">بيتزا دجاج باربيكيو</div>
+      <div class="item-desc">دجاج مشوي غني بصوص البرباكيو الأصيل، بصل أحمر، ذرة وجبن موزاريلا مذاب بالكامل</div>
+      <div class="item-footer"><span class="item-badge badge-o">باربيكيو</span></div>
+    </div>
+    <div class="item-card">
+      <span class="item-emoji">🧀</span>
+      <div class="item-name">بيتزا 4 جبن</div>
+      <div class="item-desc">مزيج فاخر من 4 جبن: موزاريلا، شيدر، إيمنتال وجبن قريش — للعشاق الحقيقيين للجبن</div>
+      <div class="item-footer"><span class="item-badge badge-g">جبن</span></div>
+    </div>
+    <div class="item-card">
+      <div class="new-tag">جديد</div>
+      <span class="item-emoji">🌶️</span>
+      <div class="item-name">بيتزا سبايسي</div>
+      <div class="item-desc">دجاج حار، فلفل حار، صوص الهاريسة وموزاريلا — لمن يحب الإحساس بالحرارة في كل لقمة</div>
+      <div class="item-footer"><span class="item-badge badge-r">حار 🌶️</span></div>
+    </div>
+    <div class="item-card">
+      <span class="item-emoji">🫒</span>
+      <div class="item-name">بيتزا إيطالية</div>
+      <div class="item-desc">ببروني دجاج، زيتون أسود، طماطم طازجة وريحان أخضر — الكلاسيك الإيطالي الأصيل</div>
+      <div class="item-footer"><span class="item-badge badge-b">إيطالية</span></div>
+    </div>
+    <div class="item-card">
+      <span class="item-emoji">🥦</span>
+      <div class="item-name">بيتزا خضار</div>
+      <div class="item-desc">فطر، فلفل، بصل، ذرة وزيتون على صوص طماطم خفيف — خيار صحي ولذيذ للجميع</div>
+      <div class="item-footer"><span class="item-badge badge-gr">نباتي</span></div>
+    </div>
+  </div>
+  <div class="call-bar" style="margin:0 5% 3rem;">
+    <p>🍕 بيتزاك الساخنة بانتظارك — اطلب الآن مع التوصيل</p>
+    <a href="tel:+213665461822">📞 0665 46 18 22</a>
+  </div>
+</div>
+
+<!-- ===================== SIDES ===================== -->
+<div class="page" id="page-menu-sides">
+  <div class="sub-hero">
+    <span class="sec-label" style="font-size:.75rem;">✦ قائمتنا</span>
+    <h1>🍟 المقبلات</h1>
+    <p>مقبلات مقرمشة ولذيذة لتكمل وجبتك المثالية</p>
+  </div>
+  <div class="items-grid">
+    <div class="item-card">
+      <div class="pop-tag">⭐ الأكثر طلباً</div>
+      <span class="item-emoji">🍟</span>
+      <div class="item-name">فريتس ماجيك</div>
+      <div class="item-desc">بطاطا مقلية مقرمشة بتوابل سرية خاصة بنا — تُقدَّم مع صوصات الديب المشكّلة</div>
+      <div class="item-footer"><span class="item-badge badge-g">كلاسيك</span></div>
+    </div>
+    <div class="item-card">
+      <span class="item-emoji">🍗</span>
+      <div class="item-name">نوغتس دجاج</div>
+      <div class="item-desc">قطع دجاج مقرمشة محضّرة بعجينة خاصة — مثالية كوجبة خفيفة أو إضافة للوجبة الرئيسية</div>
+      <div class="item-footer"><span class="item-badge badge-r">نوغتس</span></div>
+    </div>
+    <div class="item-card">
+      <span class="item-emoji">🧀</span>
+      <div class="item-name">موزاريلا ستيكس</div>
+      <div class="item-desc">أصابع الجبن المقرمشة بعجينة ذهبية — مع صوص الطماطم للتغميس الرائع</div>
+      <div class="item-footer"><span class="item-badge badge-g">جبن</span></div>
+    </div>
+    <div class="item-card">
+      <span class="item-emoji">🥗</span>
+      <div class="item-name">سلطة فريش</div>
+      <div class="item-desc">خضار موسمية طازجة: خس، طماطم، خيار، جزر مع صوص الليمون الخفيف</div>
+      <div class="item-footer"><span class="item-badge badge-gr">صحي</span></div>
+    </div>
+    <div class="item-card">
+      <span class="item-emoji">🧅</span>
+      <div class="item-name">حلقات البصل</div>
+      <div class="item-desc">حلقات بصل مقرمشة بالعجينة الذهبية — مقبّلة مثالية مع الكاتشاب أو صوص الثوم</div>
+      <div class="item-footer"><span class="item-badge badge-o">مقرمش</span></div>
+    </div>
+    <div class="item-card">
+      <span class="item-emoji">🫙</span>
+      <div class="item-name">صوصات إضافية</div>
+      <div class="item-desc">كاتشاب، مايونيز، ثوم، هاريسة، باربيكيو — أضف نكهتك المفضلة لوجبتك</div>
+      <div class="item-footer"><span class="item-badge badge-b">إضافات</span></div>
+    </div>
+  </div>
+  <div class="call-bar" style="margin:0 5% 3rem;">
+    <p>🍟 أضف مقبلاتك مع طلبك الآن</p>
+    <a href="tel:+213665461822">📞 0665 46 18 22</a>
+  </div>
+</div>
+
+<!-- ===================== DRINKS ===================== -->
+<div class="page" id="page-menu-drinks">
+  <div class="sub-hero">
+    <span class="sec-label" style="font-size:.75rem;">✦ قائمتنا</span>
+    <h1>🧃 المشروبات</h1>
+    <p>عصائر جزائرية طبيعية 100٪ ومشروبات منعشة لتكمل وجبتك</p>
+  </div>
+
+  <div class="drink-section-header">
+    <span class="sec-label">✦ عصائر جزائرية محلية طبيعية</span>
+    <h2 class="sec-title" style="font-size:clamp(2rem,5vw,3.5rem);">طبيعي 100٪ 🌿</h2>
+  </div>
+
+  <div class="items-grid" style="padding-top:0.5rem;">
+    <div class="item-card">
+      <div class="pop-tag">⭐ الأكثر طلباً</div>
+      <span class="item-emoji">🍊</span>
+      <div class="item-name">عصير البرتقال الطازج</div>
+      <div class="item-desc">برتقال جزائري معصور لحظياً — حلو طبيعي بدون سكر مضاف، مليء بفيتامين C</div>
+      <div class="item-footer"><span class="item-badge badge-o">طازج</span></div>
+    </div>
+    <div class="item-card">
+      <span class="item-emoji">🍋</span>
+      <div class="item-name">عصير الليمون بالنعناع</div>
+      <div class="item-desc">ليمون جزائري حامض مع نعناع طازج وقليل من السكر — منعش ومميز في الصيف</div>
+      <div class="item-footer"><span class="item-badge badge-gr">منعش</span></div>
+    </div>
+    <div class="item-card">
+      <span class="item-emoji">🍇</span>
+      <div class="item-name">عصير العنب</div>
+      <div class="item-desc">عنب جزائري أحمر طازج — حلو ومركّز، الكلاسيك المفضل في المناسبات العائلية</div>
+      <div class="item-footer"><span class="item-badge badge-r">عنب</span></div>
+    </div>
+    <div class="item-card">
+      <span class="item-emoji">🍓</span>
+      <div class="item-name">عصير الفراولة</div>
+      <div class="item-desc">فراولة طازجة من مزارع شمال الجزائر — كريمية مع الحليب أو صافية، حسب ذوقك</div>
+      <div class="item-footer"><span class="item-badge badge-r">فراولة</span></div>
+    </div>
+    <div class="item-card">
+      <span class="item-emoji">🥭</span>
+      <div class="item-name">عصير المانجو</div>
+      <div class="item-desc">مانجو طازجة كريمية ناعمة — لمسة استوائية حلوة في قلب جيجل</div>
+      <div class="item-footer"><span class="item-badge badge-g">مانجو</span></div>
+    </div>
+    <div class="item-card">
+      <span class="item-emoji">🍑</span>
+      <div class="item-name">عصير المشمش</div>
+      <div class="item-desc">مشمش جزائري موسمي — حلو ومركّز، طعم الصيف الجزائري الأصيل في كل رشفة</div>
+      <div class="item-footer"><span class="item-badge badge-o">موسمي</span></div>
+    </div>
+    <div class="item-card">
+      <span class="item-emoji">🍉</span>
+      <div class="item-name">عصير البطيخ</div>
+      <div class="item-desc">بطيخ أحمر منعش من حقول جيجل — أحسن مشروب يبرّد في الصيف الجزائري الحار</div>
+      <div class="item-footer"><span class="item-badge badge-r">صيفي</span></div>
+    </div>
+    <div class="item-card">
+      <span class="item-emoji">🌿</span>
+      <div class="item-name">عصير الشلفة بالزنجبيل</div>
+      <div class="item-desc">مشروب تقليدي جزائري أصيل بالشلفة، النعناع والزنجبيل — منعش ومقوٍّ للمناعة</div>
+      <div class="item-footer"><span class="item-badge badge-gr">تراثي</span></div>
+    </div>
+    <div class="item-card">
+      <span class="item-emoji">🫐</span>
+      <div class="item-name">عصير التوت الأحمر</div>
+      <div class="item-desc">توت جزائري طازج — غني بمضادات الأكسدة، حامض قليلاً وحلو جداً</div>
+      <div class="item-footer"><span class="item-badge badge-r">توت</span></div>
+    </div>
+    <div class="item-card">
+      <span class="item-emoji">🥤</span>
+      <div class="item-name">ميكس الفواكه</div>
+      <div class="item-desc">تشكيلة من الفواكه الموسمية المعصورة معاً — مفاجأة نكهة جديدة في كل مرة</div>
+      <div class="item-footer"><span class="item-badge badge-b">ميكس</span></div>
+    </div>
+  </div>
+
+  <div class="drink-section-header" style="margin-top:1rem;">
+    <span class="sec-label">✦ مشروبات باردة منعشة</span>
+    <h2 class="sec-title" style="font-size:clamp(2rem,5vw,3.5rem);">مشروبات 🥤</h2>
+  </div>
+
+  <div class="items-grid" style="padding-top:0.5rem;">
+    <div class="item-card">
+      <span class="item-emoji">🥤</span>
+      <div class="item-name">كوكاكولا / سبرايت / فانتا</div>
+      <div class="item-desc">المشروبات الغازية الكلاسيكية الباردة — الرفيق المثالي لتاكوسك أو بيتزاك</div>
+      <div class="item-footer"><span class="item-badge badge-r">غازي</span></div>
+    </div>
+    <div class="item-card">
+      <span class="item-emoji">💧</span>
+      <div class="item-name">مياه معدنية جزائرية</div>
+      <div class="item-desc">مياه باردة: Ifri, Ramy, Lalla Khedidja — الخيار الصحي الأول المحلي</div>
+      <div class="item-footer"><span class="item-badge badge-b">طبيعي</span></div>
+    </div>
+    <div class="item-card">
+      <span class="item-emoji">🧋</span>
+      <div class="item-name">ميلو / نوميلك بارد</div>
+      <div class="item-desc">مشروب الشوكولاتة البارد المحبوب لدى صغار وكبار — حلو ومقوٍّ ولذيذ</div>
+      <div class="item-footer"><span class="item-badge badge-o">حلو</span></div>
+    </div>
+    <div class="item-card">
+      <span class="item-emoji">☕</span>
+      <div class="item-name">قهوة إكسبريسو</div>
+      <div class="item-desc">قهوة قوية لإنهاء وجبتك على أكمل وجه — مصنوعة بماكينة إيطالية احترافية</div>
+      <div class="item-footer"><span class="item-badge badge-b">قهوة</span></div>
+    </div>
+  </div>
+
+  <div class="call-bar" style="margin:1rem 5% 3rem;">
+    <p>🧃 اطلب مشروبك مع وجبتك — أسعار مميزة للوجبات المشتركة</p>
+    <a href="tel:+213665461822">📞 0665 46 18 22</a>
+  </div>
+</div>
+
+<!-- ===================== SOCIAL ===================== -->
+<div class="page" id="page-social">
+  <div class="sub-hero">
+    <span class="sec-label" style="font-size:.75rem;">✦ تواصل معنا</span>
+    <h1>📱 نحن في كل مكان</h1>
+    <p>تابعنا، تواصل معنا، اطلب — كلنا في خدمتك دائماً</p>
+  </div>
+  <div class="soc-page-grid">
+    <a href="https://www.facebook.com/tacosmagicjijel/" target="_blank" class="soc-big" style="background:linear-gradient(135deg,#1a3a6b,#1877F2 90%);">
+      <span class="icon">📘</span>
+      <div class="name">FACEBOOK</div>
+      <div class="handle">TACOS MAGIC</div>
+      <div class="followers">7,641 إعجاب · 460 يتحدثون عنها</div>
+      <span class="open-btn">فتح الصفحة →</span>
+    </a>
+    <a href="https://www.instagram.com/tacosmagic/" target="_blank" class="soc-big" style="background:linear-gradient(135deg,#833ab4 0%,#fd1d1d 50%,#fcb045 100%);">
+      <span class="icon">📸</span>
+      <div class="name">INSTAGRAM</div>
+      <div class="handle">@tacosmagic</div>
+      <div class="followers">6,028 متابع · 130 منشور</div>
+      <span class="open-btn">فتح البروفيل →</span>
+    </a>
+    <a href="https://www.tiktok.com/@tacosmagic" target="_blank" class="soc-big" style="background:linear-gradient(135deg,#010101,#2a2a2a 70%);border:1px solid rgba(105,201,208,.3);">
+      <span class="icon">🎵</span>
+      <div class="name" style="color:#69C9D0;">TIKTOK</div>
+      <div class="handle">@tacosmagic</div>
+      <div class="followers" style="background:rgba(105,201,208,.15);">فيديوهات حصرية يومياً</div>
+      <span class="open-btn" style="background:rgba(105,201,208,.2);">فتح تيكتوك →</span>
+    </a>
+    <a href="tel:+213665461822" class="soc-big" style="background:linear-gradient(135deg,#1a5c1a,#25D366 90%);">
+      <span class="icon">📞</span>
+      <div class="name">اتصل بنا</div>
+      <div class="handle">0665 46 18 22</div>
+      <div class="followers">مفتوح الآن — اطلب فوراً ✅</div>
+      <span class="open-btn">اتصل مباشرة →</span>
+    </a>
+    <a href="https://maps.app.goo.gl/4LoBV2vnXycW4ogMA" target="_blank" class="soc-big" style="background:linear-gradient(135deg,#8B1A00,#E8151B 90%);">
+      <span class="icon">📍</span>
+      <div class="name">الموقع</div>
+      <div class="handle">شارع أول نوفمبر، جيجل</div>
+      <div class="followers">فتح في خرائط Google</div>
+      <span class="open-btn">فتح الخريطة →</span>
+    </a>
+    <a href="https://www.instagram.com/reel/C8aMu2_A7K7/" target="_blank" class="soc-big" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);">
+      <span class="icon">🛵</span>
+      <div class="name">Delivro Jijel</div>
+      <div class="handle">خدمة التوصيل</div>
+      <div class="followers">اطلب عبر Delivro بجيجل</div>
+      <span class="open-btn">اطلب الآن →</span>
+    </a>
+  </div>
+</div>
+
+<!-- ===================== LOCATION ===================== -->
+<div class="page" id="page-location">
+  <div class="sub-hero">
+    <span class="sec-label" style="font-size:.75rem;">✦ موقعنا</span>
+    <h1>📍 أين نجدك؟</h1>
+    <p>نحن في قلب جيجل، ننتظرك كل يوم</p>
+  </div>
+  <div class="loc-grid">
+    <div class="info-list">
+      <div class="info-row">
+        <div class="info-ico">📍</div>
+        <div><div class="info-lbl">العنوان</div><div class="info-val">شارع أول نوفمبر، جيجل، الجزائر</div></div>
+      </div>
+      <div class="info-row">
+        <div class="info-ico">📞</div>
+        <div><div class="info-lbl">الهاتف</div><div class="info-val"><a href="tel:+213665461822">0665 46 18 22</a></div></div>
+      </div>
+      <div class="info-row">
+        <div class="info-ico">🕐</div>
+        <div><div class="info-lbl">ساعات العمل</div><div class="info-val">يومياً — مفتوح الآن ✅</div></div>
+      </div>
+      <div class="info-row">
+        <div class="info-ico">🛵</div>
+        <div><div class="info-lbl">التوصيل</div><div class="info-val">متاح عبر Delivro Jijel</div></div>
+      </div>
+      <div class="info-row">
+        <div class="info-ico">🅿️</div>
+        <div><div class="info-lbl">موقف السيارات</div><div class="info-val">متاح بالقرب من المطعم</div></div>
+      </div>
+      <div class="info-row">
+        <div class="info-ico">📘</div>
+        <div><div class="info-lbl">فيسبوك</div><div class="info-val"><a href="https://www.facebook.com/tacosmagicjijel/" target="_blank">TACOS MAGIC</a></div></div>
+      </div>
+      <div class="info-row">
+        <div class="info-ico">📸</div>
+        <div><div class="info-lbl">إنستغرام</div><div class="info-val"><a href="https://www.instagram.com/tacosmagic/" target="_blank">@tacosmagic</a></div></div>
+      </div>
+      <div class="info-row">
+        <div class="info-ico">🎵</div>
+        <div><div class="info-lbl">تيكتوك</div><div class="info-val"><a href="https://www.tiktok.com/@tacosmagic" target="_blank">@tacosmagic</a></div></div>
+      </div>
+    </div>
+    <div class="map-box">
+      <span style="font-size:5rem;">🗺️</span>
+      <h3>Tacos Magic – جيجل</h3>
+      <p>شارع أول نوفمبر، جيجل، الجزائر</p>
+      <a class="map-btn" href="https://maps.app.goo.gl/4LoBV2vnXycW4ogMA" target="_blank">📍 فتح في Google Maps</a>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== ABOUT ===================== -->
+<div class="page" id="page-about">
+  <div class="sub-hero">
+    <span class="sec-label" style="font-size:.75rem;">✦ من نحن</span>
+    <h1>✨ قصتنا</h1>
+    <p>ماجيك في كل لقمة — جيجل تستحق الأفضل</p>
+  </div>
+  <div class="about-wrap">
+    <div class="about-intro">
+      <p>🌮 <strong style="color:#fff;">Tacos Magic</strong> هو مطعم Fast Food متخصص في التاكوس والبيتزا، في قلب جيجل على شارع أول نوفمبر. بدأنا بشغف حقيقي لتقديم نكهات مختلفة ومميزة لشباب جيجل.</p>
+      <p>نؤمن أن الأكل الجيد يجب أن يكون متاحاً للجميع — جودة عالية، مكونات طازجة يومياً، وخدمة سريعة تحترم وقتك. هذا هو وعدنا لك في كل زيارة.</p>
+      <p>اليوم، نفتخر بثقة أكثر من <strong style="color:var(--gold);">13,000 متابع</strong> على منصات التواصل الاجتماعي وآلاف الزبائن الأوفياء الذين يعودون إلينا مراراً وتكراراً.</p>
+    </div>
+    <div style="margin-bottom:1.5rem;">
+      <span class="sec-label">✦ ما يميزنا</span>
+      <h2 class="sec-title" style="font-size:clamp(2rem,5vw,3.5rem);">لماذا Tacos Magic؟</h2>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-box"><span>🌮</span><span>تاكوس طازج يومياً</span></div>
+      <div class="feat-box"><span>🍕</span><span>بيتزا بعجينة منزلية</span></div>
+      <div class="feat-box"><span>🛵</span><span>توصيل سريع لجيجل</span></div>
+      <div class="feat-box"><span>⚡</span><span>خدمة سريعة وفعّالة</span></div>
+      <div class="feat-box"><span>✅</span><span>مكونات طازجة مضمونة</span></div>
+      <div class="feat-box"><span>💯</span><span>جودة لا تُضاهى</span></div>
+      <div class="feat-box"><span>🧃</span><span>عصائر جزائرية طبيعية</span></div>
+      <div class="feat-box"><span>🔥</span><span>نكهات تسحر الذوق</span></div>
+      <div class="feat-box"><span>⭐</span><span>تقييم 4.5 نجوم</span></div>
+      <div class="feat-box"><span>📱</span><span>اطلب عبر الهاتف</span></div>
+    </div>
+    <div class="call-bar">
+      <p>🌟 جرّب الفرق بنفسك — اطلب الآن أو زرنا في جيجل</p>
+      <a href="tel:+213665461822">📞 0665 46 18 22</a>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SCRIPT ===================== -->
+<script>
+var PAGES = ['home','menu-tacos','menu-pizza','menu-sides','menu-drinks','social','location','about'];
+
+function goPage(id) {
+  PAGES.forEach(function(p) {
+    var el = document.getElementById('page-' + p);
+    if (el) el.classList.remove('active');
+  });
+  var target = document.getElementById('page-' + id);
+  if (target) {
+    target.classList.add('active');
+    window.scrollTo(0, 0);
+    setTimeout(function() {
+      target.querySelectorAll('[data-anim]').forEach(function(el) {
+        el.classList.add('vis');
+      });
+    }, 150);
+  }
+  var backBtn = document.getElementById('backBtn');
+  if (backBtn) {
+    backBtn.style.display = (id === 'home') ? 'none' : 'flex';
+  }
+  // close mobile menu
+  closeMobileMenu();
+}
+
+function closeMobileMenu() {
+  var nl = document.getElementById('navLinks');
+  if (nl) {
+    nl.style.cssText = '';
+    nl.classList.remove('open');
+  }
+}
+
+function toggleBurger() {
+  var nl = document.getElementById('navLinks');
+  if (!nl) return;
+  var isOpen = nl.classList.contains('open');
+  if (isOpen) {
+    closeMobileMenu();
+  } else {
+    nl.style.cssText = 'display:flex;flex-direction:column;position:fixed;top:68px;left:0;right:0;background:rgba(8,8,8,.98);padding:2rem;gap:1.2rem;z-index:9998;border-bottom:1px solid rgba(232,21,27,.2);';
+    nl.classList.add('open');
+  }
+}
+
+// scroll reveal observer
+var obs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting) e.target.classList.add('vis');
+  });
+}, {threshold: 0.1});
+
+document.querySelectorAll('[data-anim]').forEach(function(el) {
+  obs.observe(el);
+});
+
+// init
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(function() {
+    document.querySelectorAll('#page-home [data-anim]').forEach(function(el) {
+      el.classList.add('vis');
+    });
+  }, 300);
+});
+</script>
+</body>
+</html>
